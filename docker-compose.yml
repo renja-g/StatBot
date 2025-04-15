@@ -1,0 +1,47 @@
+services:
+  db:
+    image: timescale/timescaledb:latest-pg15
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  tracker:
+    build:
+      context: .
+      dockerfile: services/tracker/Dockerfile
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./services/tracker/.env
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+
+  api:
+    build:
+      context: .
+      dockerfile: services/api/Dockerfile
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+
+
+volumes:
+  postgres_data:

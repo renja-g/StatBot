@@ -42,6 +42,16 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
 
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_started
 
 volumes:
   postgres_data:

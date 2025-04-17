@@ -11,7 +11,7 @@ export function ApiResponse() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/');
+        const response = await fetch('/api/hello');
         
         if (!response.ok) {
           throw new Error(`API responded with status: ${response.status}`);

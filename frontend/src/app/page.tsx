@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ApiResponse } from "@/app/components/ApiResponse";
 
 export default function Home() {

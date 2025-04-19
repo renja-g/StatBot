@@ -3,7 +3,17 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 
-export function TimelineChart() {
+interface TimelineChartProps {
+  timelineData?: (string | number)[][];
+  minDate?: string;
+  maxDate?: string;
+}
+
+export function TimelineChart({ 
+  timelineData = [], 
+  minDate = '2024-01-01 00:00:00', 
+  maxDate = '2024-01-01 23:59:59' 
+}: TimelineChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -19,19 +29,7 @@ export function TimelineChart() {
       'Offline': '#747F8D'
     };
 
-    const timelineData = [
-      [0, '2024-01-01 00:00:00', '2024-01-01 06:00:00', 'Offline'],
-      [0, '2024-01-01 06:00:00', '2024-01-01 08:00:00', 'Idle'],
-      [0, '2024-01-01 08:00:00', '2024-01-01 10:30:00', 'Online'],
-      [0, '2024-01-01 10:30:00', '2024-01-01 11:00:00', 'Idle'],
-      [0, '2024-01-01 11:00:00', '2024-01-01 12:30:00', 'Online'],
-      [0, '2024-01-01 12:30:00', '2024-01-01 13:00:00', 'Do Not Disturb'],
-      [0, '2024-01-01 13:00:00', '2024-01-01 15:30:00', 'Online'],
-      [0, '2024-01-01 15:30:00', '2024-01-01 16:00:00', 'Do Not Disturb'],
-      [0, '2024-01-01 16:00:00', '2024-01-01 16:30:00', 'Idle'],
-      [0, '2024-01-01 16:30:00', '2024-01-01 17:30:00', 'Online'],
-      [0, '2024-01-01 17:30:00', '2024-01-02 00:00:00', 'Offline']
-    ];
+    const chartData = timelineData;
 
     // Function to render the custom bars (timeline segments)
     function renderItem(params: any, api: any) {
@@ -112,8 +110,8 @@ export function TimelineChart() {
       },
       xAxis: {
         type: 'time',
-        min: '2024-01-01 00:00:00',
-        max: '2024-01-02 00:00:00',
+        min: minDate,
+        max: maxDate,
         axisLabel: {
           formatter: function (value: any) {
             return echarts.format.formatTime('hh:00', value);
@@ -154,7 +152,7 @@ export function TimelineChart() {
             tooltip: [1, 2, 3],
             itemName: 3
           },
-          data: timelineData
+          data: chartData
         }
       ]
     };
@@ -173,7 +171,7 @@ export function TimelineChart() {
       chart.dispose();
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [timelineData, minDate, maxDate]);
 
   return <div ref={chartRef} className="w-full h-full" />;
 } 

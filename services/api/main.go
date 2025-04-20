@@ -123,9 +123,9 @@ func getStatusChangesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type SimpleStatus struct {
-		StartTime string `json:"StartTime"`
-		EndTime   string `json:"EndTime"`
-		Status    string `json:"Status"`
+		StartTime string `json:"startTime"`
+		EndTime   string `json:"endTime"`
+		Status    string `json:"status"`
 	}
 
 	result := make([]SimpleStatus, 0, len(statusChanges))
